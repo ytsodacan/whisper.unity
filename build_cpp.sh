@@ -71,22 +71,23 @@ build_android() {
   clean_build
   echo "Starting building for Android..."
 
-  cmake -DCMAKE_TOOLCHAIN_FILE="$android_sdk_path" -DANDROID_ABI=arm64-v8a -DGGML_OPENMP=OFF -DBUILD_SHARED_LIBS=OFF \
+  cmake -DCMAKE_TOOLCHAIN_FILE="$android_sdk_path" -DANDROID_ABI=arm64-v8a -DGGML_OPENMP=OFF -DBUILD_SHARED_LIBS=ON \
   -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DVK_USE_PLATFORM_ANDROID_KHR=ON -DGGML_VULKAN_COOPMAT2_GLSLC_SUPPORT=OFF -DGGML_VULKAN_COOPMAT_GLSLC_SUPPORT=OFF -DGGML_VULKAN_INTEGER_DOT_GLSLC_SUPPORT=OFF -DVulkan_GLSLC_EXECUTABLE=/opt/homebrew/bin/glslc -DVulkan_LIBRARY=/Applications/Unity/Hub/Editor/6000.2.12f1/PlaybackEngines/AndroidPlayer/NDK/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/35/libvulkan.so -DVulkan_INCLUDE_DIR=/opt/homebrew/opt/vulkan-headers/include ../
   make
 
   echo "Build for Android complete!"
 
-  rm $unity_project/Packages/com.whisper.unity/Plugins/Android/*.a
+  rm -f $unity_project/Packages/com.whisper.unity/Plugins/Android/*.a
+  rm -f $unity_project/Packages/com.whisper.unity/Plugins/Android/*.so
 
-  artifact_path="$build_path/src/libwhisper.a"
-  target_path="$unity_project/Packages/com.whisper.unity/Plugins/Android/libwhisper.a"
+  artifact_path="$build_path/src/libwhisper.so"
+  target_path="$unity_project/Packages/com.whisper.unity/Plugins/Android/libwhisper.so"
   cp "$artifact_path" "$target_path"
 
   artifact_path=$build_path/ggml/src
   target_path=$unity_project/Packages/com.whisper.unity/Plugins/Android/
-  cp "$artifact_path"/*.a "$target_path"
-  cp "$artifact_path"/*/*.a "$target_path"
+  cp "$artifact_path"/*.so "$target_path"
+  cp "$artifact_path"/*/*.so "$target_path"
 
   echo "Build files copied to $target_path"
 }
