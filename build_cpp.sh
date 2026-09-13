@@ -1,10 +1,10 @@
 #!/bin/bash
 
-whisper_path="$1"
+whisper_path="$(cd "$1" && pwd)"
 targets=${2:-all}
 android_sdk_path="$3"
 unity_project="$PWD"
-build_path="$1/build"
+build_path="$whisper_path/build"
 
 clean_build(){
   rm -rf "$build_path"
@@ -72,7 +72,9 @@ build_android() {
   echo "Starting building for Android..."
 
   cmake -DCMAKE_TOOLCHAIN_FILE="$android_sdk_path" -DANDROID_ABI=arm64-v8a -DGGML_OPENMP=OFF -DBUILD_SHARED_LIBS=ON \
-  -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DVK_USE_PLATFORM_ANDROID_KHR=ON -DGGML_VULKAN_COOPMAT2_GLSLC_SUPPORT=OFF -DGGML_VULKAN_COOPMAT_GLSLC_SUPPORT=OFF -DGGML_VULKAN_INTEGER_DOT_GLSLC_SUPPORT=OFF -DVulkan_GLSLC_EXECUTABLE=/opt/homebrew/bin/glslc -DVulkan_LIBRARY=/Applications/Unity/Hub/Editor/6000.2.12f1/PlaybackEngines/AndroidPlayer/NDK/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/35/libvulkan.so -DVulkan_INCLUDE_DIR=/opt/homebrew/opt/vulkan-headers/include ../
+  -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DVK_USE_PLATFORM_ANDROID_KHR=ON -DGGML_VULKAN_COOPMAT2_GLSLC_SUPPORT=OFF -DGGML_VULKAN_COOPMAT_GLSLC_SUPPORT=OFF -DGGML_VULKAN_INTEGER_DOT_GLSLC_SUPPORT=OFF -DVulkan_GLSLC_EXECUTABLE=/opt/homebrew/bin/glslc -DVulkan_LIBRARY=/Applications/Unity/Hub/Editor/6000.2.12f1/PlaybackEngines/AndroidPlayer/NDK/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/35/libvulkan.so -DVulkan_INCLUDE_DIR=/opt/homebrew/opt/vulkan-headers/include \
+  -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384" \
+  -DCMAKE_EXE_LINKER_FLAGS="-Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384" ../
   make
 
   echo "Build for Android complete!"
