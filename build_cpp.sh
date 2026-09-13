@@ -72,7 +72,7 @@ build_android() {
   echo "Starting building for Android..."
 
   cmake -DCMAKE_TOOLCHAIN_FILE="$android_sdk_path" -DANDROID_ABI=arm64-v8a -DGGML_OPENMP=OFF -DBUILD_SHARED_LIBS=OFF \
-  -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release ../
+  -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=OFF -DCMAKE_BUILD_TYPE=Release -DGGML_VULKAN=ON -DVK_USE_PLATFORM_ANDROID_KHR=ON -DGGML_VULKAN_COOPMAT2_GLSLC_SUPPORT=OFF -DGGML_VULKAN_COOPMAT_GLSLC_SUPPORT=OFF -DGGML_VULKAN_INTEGER_DOT_GLSLC_SUPPORT=OFF -DVulkan_GLSLC_EXECUTABLE=/opt/homebrew/bin/glslc -DVulkan_LIBRARY=/Applications/Unity/Hub/Editor/6000.2.12f1/PlaybackEngines/AndroidPlayer/NDK/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/35/libvulkan.so -DVulkan_INCLUDE_DIR=/opt/homebrew/opt/vulkan-headers/include ../
   make
 
   echo "Build for Android complete!"
